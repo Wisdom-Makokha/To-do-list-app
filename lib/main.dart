@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/screens/home_screen.dart';
 
 void main() {
-  runApp(const todo_app());
+  runApp(const ToDoApp());
 }
 
-class todo_app extends StatelessWidget {
-  const todo_app({super.key});
+class ToDoApp extends StatelessWidget {
+  const ToDoApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -14,9 +14,10 @@ class todo_app extends StatelessWidget {
     return MaterialApp(
       title: 'Todo List App',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.lime,
       ),
-      home: homescreen(),
+      home: const HomeScreen(),
+
       debugShowCheckedModeBanner: false,
     );
   }
