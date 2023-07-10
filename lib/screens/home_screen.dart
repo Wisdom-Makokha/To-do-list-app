@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/Screens/Login.dart';
 
 class HomeScreen extends StatelessWidget{
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context){
+    //ELevated button style defined here for reuse
+    final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
+      side: const BorderSide(
+        color: Colors.black,
+        width: 2,
+      ),
+      shadowColor: Colors.lime,
+      textStyle: const TextStyle(
+        fontSize: 20,
+        fontStyle: FontStyle.normal,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('To do List'),
@@ -14,39 +26,24 @@ class HomeScreen extends StatelessWidget{
         child: Column(
             mainAxisAlignment:MainAxisAlignment.center,
             children: [
+              const Text('Hello',
+                  style: TextStyle(
+                    color: Colors.lime,
+                    fontSize: 25,
+                    fontStyle: FontStyle.normal,
+                  )),
               const Text("Welcome to to the to do list app!",
               style: TextStyle(
-                color: Colors.blue,
+                color: Colors.lime,
                 fontSize: 18,
                 fontStyle: FontStyle.normal,
               )),
-              const Text('Hello',
-              style: TextStyle(
-                color: Colors.purple,
-                fontSize: 15,
-                fontStyle: FontStyle.normal,
-              )),
+              const Image(image: AssetImage('images/'
+                  'home_screen_to_do_list.png')),
               ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)
-                  => const LoginScreen()),);
-                },
-                style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                    color: Colors.white38,
-                    fontSize: 20,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 2,
-                  ),
-                  shape: const BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  shadowColor: Colors.lime,
-                ),
-                child: const Text('Raised button'),
+                onPressed: null,
+                style: elevatedButtonsStyle,
+                child: const Text('Your tasks'),
               )
             ],
         ),

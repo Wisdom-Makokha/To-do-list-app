@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/screens/home_screen.dart';
+import 'package:to_do_list/Screens/Login.dart';
 
 void main() {
   runApp(const ToDoApp());
@@ -12,13 +12,13 @@ class ToDoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Todo List App',
       theme: ThemeData(
         primarySwatch: Colors.lime,
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
 
-      debugShowCheckedModeBanner: false,
     );
   }
 }

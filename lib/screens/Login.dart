@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_list/Screens/home_screen.dart';
+import 'package:to_do_list/Screens/ForgotPassword.dart';
 
 class LoginScreen extends StatelessWidget{
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context){
+
+    //ELevated button style defined here for reuse
+    final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
+      side: const BorderSide(
+        color: Colors.black,
+        width: 2,
+      ),
+      shadowColor: Colors.lime,
+      textStyle: const TextStyle(
+        fontSize: 20,
+        fontStyle: FontStyle.normal,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children:[
-            const Image(image: AssetImage('Mobile_login.png')),
+            const Image(image: AssetImage('images/mobile_login_png.png')),
             const Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 10,
@@ -22,27 +38,40 @@ class LoginScreen extends StatelessWidget{
               child: TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Username',
+                  labelText: 'Username',
+                  hintText: 'Enter your registered name',
                 )
               ),
             ),
             const Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: 10,
-                  vertical: 10),
+                  vertical: 5),
               child: TextField(
-                decoration: InputDecoration(
+                  obscureText: true,
+                  decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Password',
+                  labelText: 'Password',
+                  hintText: 'Enter your secure password',
                 ),
               ),
             ),
-            const Text('Forgot Password',
+            TextButton(
+                onPressed:(){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)
+                  => const ForgotPassScreen()),);
+                },
+                child: const Text('Forgot password',
+                    style: TextStyle(
+                      color: Colors.blue,
+                    )),
             ),
             ElevatedButton(
-              onPressed:(){
-                Navigator.pop(context);
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                => const HomeScreen()),);
               },
+              style: elevatedButtonsStyle,
               child: const Text('Login'),
             )
           ]
