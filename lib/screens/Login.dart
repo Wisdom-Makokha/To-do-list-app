@@ -9,7 +9,7 @@ class LoginScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
 
-    //ELevated button style defined here for reuse
+    //Elevated button style defined here for reuse
     final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
       side: const BorderSide(
         color: Colors.black,
@@ -20,6 +20,12 @@ class LoginScreen extends StatelessWidget{
         fontSize: 20,
         fontStyle: FontStyle.normal,
       ),
+    );
+
+    //Values for the padding of TextField
+    const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
+      horizontal: 10,
+      vertical: 10,
     );
 
     return Scaffold(
@@ -33,10 +39,7 @@ class LoginScreen extends StatelessWidget{
             const Image(image: AssetImage('images/mobile_login_png.png'),
             width: 300,),
             const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5,
-              ),
+              padding: textFieldPadding,
               child: TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -46,9 +49,7 @@ class LoginScreen extends StatelessWidget{
               ),
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5),
+              padding: textFieldPadding,
               child: TextField(
                   obscureText: true,
                   decoration: InputDecoration(

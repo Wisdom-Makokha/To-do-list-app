@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_list/screens/Login.dart';
 
 class RegisterScreen extends StatelessWidget{
   const RegisterScreen({super.key});
@@ -6,19 +7,36 @@ class RegisterScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
 
+    //Values for the padding of TextField
     const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
       horizontal: 10,
       vertical: 10,
-    )
+    );
+
+    //Elevated button style defined here for reuse
+    final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
+      side: const BorderSide(
+        color: Colors.black,
+        width: 2,
+      ),
+      shadowColor: Colors.lime,
+      textStyle: const TextStyle(
+        fontSize: 20,
+        fontStyle: FontStyle.normal,
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children:[
-            Padding(
+            const Image(image: AssetImage('images/register_to_do.png'),
+            width: 300),
+            const Padding(
               padding: textFieldPadding,
               child: TextField(
                 decoration: InputDecoration(
@@ -28,7 +46,7 @@ class RegisterScreen extends StatelessWidget{
                 ),
               ),
             ),
-            Padding(
+            const Padding(
               padding: textFieldPadding,
               child: TextField(
                 decoration: InputDecoration(
@@ -38,7 +56,7 @@ class RegisterScreen extends StatelessWidget{
                 ),
               ),
             ),
-            Padding(
+            const Padding(
               padding: textFieldPadding,
               child: TextField(
                 obscureText: true,
@@ -50,8 +68,12 @@ class RegisterScreen extends StatelessWidget{
               ),
             ),
             ElevatedButton(
-              onPressed: (){},
-              child: Text('Register')
+              onPressed:(){
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                => const LoginScreen()),);
+              },
+              style: elevatedButtonsStyle,
+              child: const Text('Register'),
             )
           ],
         ),

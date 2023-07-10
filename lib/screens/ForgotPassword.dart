@@ -5,7 +5,7 @@ class ForgotPassScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    //ELevated button style defined here for reuse
+    //Elevated button style defined here for reuse
     final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
       side: const BorderSide(
         color: Colors.black,
@@ -17,6 +17,13 @@ class ForgotPassScreen extends StatelessWidget{
         fontStyle: FontStyle.normal,
       ),
     );
+
+    //Values for the padding of TextField
+    const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
+      horizontal: 10,
+      vertical: 10,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forgot Password'),
@@ -27,10 +34,7 @@ class ForgotPassScreen extends StatelessWidget{
           children: [
             const Image(image: AssetImage('images/forgot_password.png')),
             const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5,
-              ),
+              padding: textFieldPadding,
               child: TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -41,12 +45,7 @@ class ForgotPassScreen extends StatelessWidget{
             ),
             ElevatedButton(
               onPressed:(){ },
-              style: ElevatedButton.styleFrom(
-                side: const BorderSide(
-                  color: Colors.black,
-                  width: 2,
-                )
-              ),
+              style: elevatedButtonsStyle,
               child: const Text('Reset Password'),
             ),
           ],

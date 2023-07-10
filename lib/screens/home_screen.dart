@@ -5,7 +5,7 @@ class HomeScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    //ELevated button style defined here for reuse
+    //Elevated button style defined here for reuse
     final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
       side: const BorderSide(
         color: Colors.black,
