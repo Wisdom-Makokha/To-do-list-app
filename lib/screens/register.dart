@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/screens/Login.dart';
+import 'package:to_do_list/screens/login.dart';
 
 class RegisterScreen extends StatelessWidget{
   const RegisterScreen({super.key});
@@ -64,6 +64,17 @@ class RegisterScreen extends StatelessWidget{
                   border: OutlineInputBorder(),
                   hintText: 'Enter a secure password',
                   labelText: 'Password',
+                ),
+              ),
+            ),
+            const Padding(
+              padding: textFieldPadding,
+              child: TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Confirm Password',
+                  labelText: 'Reenter your secure password',
                 ),
               ),
             ),

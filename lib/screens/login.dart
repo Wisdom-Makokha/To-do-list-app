@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/Screens/home_screen.dart';
-import 'package:to_do_list/Screens/ForgotPassword.dart';
-import 'package:to_do_list/Screens/Register.dart';
+import 'package:to_do_list/Screens/forgotpassword.dart';
+import 'package:to_do_list/Screens/register.dart';
+import 'package:to_do_list/definitions/declarations.dart';
 
 class LoginScreen extends StatelessWidget{
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context){
-
-    //Elevated button style defined here for reuse
-    final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
-      side: const BorderSide(
-        color: Colors.black,
-        width: 2,
-      ),
-      shadowColor: Colors.lime,
-      textStyle: const TextStyle(
-        fontSize: 20,
-        fontStyle: FontStyle.normal,
-      ),
-    );
-
-    //Values for the padding of TextField
-    const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
-      horizontal: 10,
-      vertical: 10,
-    );
 
     return Scaffold(
       appBar: AppBar(
