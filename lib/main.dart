@@ -16,6 +16,7 @@ class ToDoApp extends StatelessWidget {
       title: 'Todo List App',
       theme: ThemeData(
         primarySwatch: Colors.lime,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const LoginScreen(),
 

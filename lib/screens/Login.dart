@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/Screens/home_screen.dart';
 import 'package:to_do_list/Screens/ForgotPassword.dart';
+import 'package:to_do_list/Screens/Register.dart';
 
 class LoginScreen extends StatelessWidget{
   const LoginScreen({super.key});
@@ -29,7 +30,8 @@ class LoginScreen extends StatelessWidget{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children:[
-            const Image(image: AssetImage('images/mobile_login_png.png')),
+            const Image(image: AssetImage('images/mobile_login_png.png'),
+            width: 300,),
             const Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 10,
@@ -65,6 +67,18 @@ class LoginScreen extends StatelessWidget{
                     style: TextStyle(
                       color: Colors.blue,
                     )),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                => const RegisterScreen()),);
+              },
+              child:const  Text('Not yet registered?\nRegister now.',
+              style: TextStyle(
+                color: Colors.blue,
+              ),
+              textAlign: TextAlign.center
+              )
             ),
             ElevatedButton(
               onPressed: (){
