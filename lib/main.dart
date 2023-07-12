@@ -13,7 +13,7 @@ class ToDoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Todo List App',
+      title: 'To Do List App',
       theme: ThemeData(
         primarySwatch: Colors.lime,
         visualDensity: VisualDensity.adaptivePlatformDensity,

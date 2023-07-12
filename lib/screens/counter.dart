@@ -28,6 +28,7 @@ class CounterScreenState extends State<CounterScreen>{
 
     locatorFlag = !locatorFlag;
   }
+
   @override
   Widget build(BuildContext context){
 
@@ -44,7 +45,7 @@ class CounterScreenState extends State<CounterScreen>{
     );
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Counter'),
+          title: const Text('Count'),
         ),
         body: Center(
           child: Column(
@@ -52,9 +53,7 @@ class CounterScreenState extends State<CounterScreen>{
             children: [
               Text('You have counted $ourCounter times'),
               ElevatedButton(
-                onPressed: () {
-                  changeFloatLocation();
-                },
+                onPressed: changeFloatLocation,
                 style: elevatedButtonsStyle,
                 child: const Text('Boo'),
               ),
