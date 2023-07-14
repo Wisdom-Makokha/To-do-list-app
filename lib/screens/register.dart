@@ -1,31 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/screens/login.dart';
+import 'package:to_do_list/Definitions/declarations.dart';
 
-class RegisterScreen extends StatelessWidget{
-  const RegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget{
+  const RegisterScreen ({super.key});
+
+  @override
+  State<RegisterScreen> createState()=> RegisterScreenState();
+}
+
+final TextEditingController userNameController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passCheckController = TextEditingController();
+
+class RegisterScreenState extends State<RegisterScreen>{
+
+  bool passwordMatch(){
+    if(passwordController.text == passCheckController.text) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> insertIntoDB() async{
+    String nameUser = userNameController.text;
+    String addressEmail = emailController.text;
+    String password = passwordController.text;
+
+    await toDoListDatabase.rawInsert(
+        "INSERT INTO $userTable"
+            " ($table1Column1, $table1Column2, $table1Column3)"
+            " VALUES('$nameUser', '$addressEmail', '$password')"
+    );
+  }
+
+  void registerNew (){
+    insertIntoDB();
+
+    Navigator.pushNamed(context, '/');
+  }
 
   @override
   Widget build(BuildContext context){
-
-    //Values for the padding of TextField
-    const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
-      horizontal: 10,
-      vertical: 10,
-    );
-
-    //Elevated button style defined here for reuse
-    final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
-      side: const BorderSide(
-        color: Colors.black,
-        width: 2,
-      ),
-      shadowColor: Colors.lime,
-      textStyle: const TextStyle(
-        fontSize: 20,
-        fontStyle: FontStyle.normal,
-      ),
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -36,53 +53,41 @@ class RegisterScreen extends StatelessWidget{
           children:[
             const Image(image: AssetImage('images/register_to_do.png'),
             width: 300),
-            const Padding(
+            Container(
               padding: textFieldPadding,
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a unique user name',
-                  labelText: 'Username',
-                ),
-              ),
-            ),
-            const Padding(
-              padding: textFieldPadding,
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Email',
-                  labelText: 'Enter your email address',
-                ),
-              ),
-            ),
-            const Padding(
-              padding: textFieldPadding,
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter a secure password',
-                  labelText: 'Password',
-                ),
-              ),
-            ),
-            const Padding(
-              padding: textFieldPadding,
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Confirm Password',
-                  labelText: 'Reenter your secure password',
-                ),
+              child: Column(
+                children: <Widget>[
+                  MyTextField(
+                      hintText: 'Enter a unique username',
+                      labelText: 'Username',
+                      controller: userNameController,
+                  ),
+                  const SizedBox(height: 16,),
+                  MyTextField(
+                    hintText: 'Enter your email address',
+                    labelText: 'Email',
+                    controller: emailController,
+                  ),
+                  const SizedBox(height: 16,),
+                  MyTextField(
+                    hintText: 'Enter a secure password',
+                    labelText: 'Password',
+                    controller: passwordController,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16,),
+                  MyTextField(
+                    hintText: 'Reenter your password',
+                    labelText: 'Confirm password',
+                    controller: passCheckController,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16,)
+                ],
               ),
             ),
             ElevatedButton(
-              onPressed:(){
-                Navigator.push(context, MaterialPageRoute(builder: (context)
-                => const LoginScreen()),);
-              },
+              onPressed: registerNew,
               style: elevatedButtonsStyle,
               child: const Text('Register'),
             )
