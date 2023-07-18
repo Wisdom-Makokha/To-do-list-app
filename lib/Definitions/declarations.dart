@@ -28,6 +28,12 @@ const String table1Column1 = 'username';
 const String table1Column2 = 'email';
 const String table1Column3 = 'password';
 
+const String taskTable = "tasks";
+
+const String taskTBName = 'title';
+const String taskTBDescription = 'description';
+const String taskTBCompletedFlag = 'complete';
+
 //class to create a TextField whenever it is required
 class MyTextField extends StatelessWidget{
   const MyTextField({

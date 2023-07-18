@@ -14,22 +14,8 @@ import 'package:to_do_list/Definitions/declarations.dart';
 void main() async{
   runApp(const ToDoApp());
 
-  Directory documentsDirectory = await getApplicationDocumentsDirectory();
-  String pathToDB = "${documentsDirectory.path}/users.db";
-
-  toDoListDatabase = await openDatabase(
-    pathToDB,
-    version: 1,
-    onCreate: (Database db, int version) async{
-      await db.execute(
-        "CREATE TABLE $userTable"
-            " (id INT PRIMARY KEY AUTOINCREMENT,"
-            "$table1Column1 VARCHAR(54),"
-            " $table1Column2 VARCHAR(150),"
-            " $table1Column3 VARCHAR(50))"
-      );
-    }
-  );
+  createToDoListDB();
+  createTaskTable();
 }
 
 class ToDoApp extends StatelessWidget {
@@ -49,9 +35,38 @@ class ToDoApp extends StatelessWidget {
         '/ForgotPass': (context) => const ForgotPassScreen(),
       },
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF648c11 )),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );
   }
+}
+
+void createToDoListDB()async{
+  Directory documentsDirectory = await getApplicationDocumentsDirectory();
+  String pathToDB = "${documentsDirectory.path}/users.db";
+
+  toDoListDatabase = await openDatabase(
+      pathToDB,
+      version: 1,
+      onCreate: (Database db, int version) async{
+        await db.execute(
+            "CREATE TABLE $userTable"
+                " (id INT PRIMARY KEY AUTOINCREMENT,"
+                "$table1Column1 VARCHAR(54),"
+                " $table1Column2 VARCHAR(150),"
+                " $table1Column3 VARCHAR(50))"
+        );
+      }
+  );
+}
+
+void createTaskTable()async{
+  await toDoListDatabase.rawQuery(
+      "CREATE TABLE $taskTable"
+          "(id INT PRIMARY KEY AUTOINCREMENT,"
+          "$taskTBName VARCHAR(54),"
+          "$taskTBDescription VARCHAR(150),"
+          "$taskTBCompletedFlag BOOL)"
+  );
 }

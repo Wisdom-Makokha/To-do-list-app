@@ -41,6 +41,21 @@ with SingleTickerProviderStateMixin{
     //Repeats the animation continuously in a reverse manner
   }
 
+  void mySnackBar(String myText, Color myBackgroundColor)
+  {
+    final snackBar = SnackBar(
+      content: Text(myText,
+        style: const TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: myBackgroundColor,
+      duration: const Duration(seconds: 2),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void dispose(){
     animationController.dispose();
@@ -61,20 +76,13 @@ with SingleTickerProviderStateMixin{
     if(users.isNotEmpty){
       //Login successful
       //Perform necessary actions (e.g navigate to another screen)
-      Navigator.pushNamed(context, '/Home');
+      Navigator.pushReplacementNamed(context, '/Home');
 
-      const snackBar = SnackBar(
-        content: Text('Login successful!',
-        style: TextStyle(
-            color: Colors.black,
-        ),
-      ),
-        backgroundColor: Colors.lime,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      mySnackBar('Login successful!', Colors.lime);
       } else {
       //Login failed
+
+      mySnackBar('Login Failed!', Colors.red);
       print("Login failed");
     }
   }
@@ -94,6 +102,21 @@ with SingleTickerProviderStateMixin{
               opacity: animation,
               child: const Image(image: AssetImage('images/mobile_login_png.png'),
                 width: 300,),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Don\'t have an account?'),
+                TextButton(
+                  onPressed:(){
+                    Navigator.pushNamed(context, '/Register');
+                  },
+                  child: const Text('Register',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      )),
+                ),
+              ],
             ),
             Container(
               padding: textFieldPadding,
@@ -115,20 +138,12 @@ with SingleTickerProviderStateMixin{
                 ],
               ),
             ),
-            TextButton(
-                onPressed:(){
-                  Navigator.pushReplacementNamed(context, '/Home');
-                },
-                child: const Text('Forgot password',
-                    style: TextStyle(
-                      color: Colors.blue,
-                    )),
-            ),
+
             TextButton(
               onPressed: (){
-                Navigator.pushNamed(context, '/Register');
+                Navigator.pushNamed(context, '/ForgotPass');
               },
-              child:const  Text('Not yet registered?\nRegister now.',
+              child:const  Text('Forgot password?',
               style: TextStyle(
                 color: Colors.blue,
               ),

@@ -14,31 +14,41 @@ final TextEditingController emailController = TextEditingController();
 final TextEditingController passCheckController = TextEditingController();
 
 class RegisterScreenState extends State<RegisterScreen>{
+  void mySnackBar(String myText, Color myBackgroundColor)
+  {
+    final snackBar = SnackBar(
+      content: Text(myText,
+        style: const TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: myBackgroundColor,
+      duration: const Duration(seconds: 2),
+    );
 
-  bool passwordMatch(){
-    if(passwordController.text == passCheckController.text) {
-      return true;
-    } else {
-      return false;
-    }
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future<void> insertIntoDB() async{
+  Future<void> registerMe() async{
     String nameUser = userNameController.text;
     String addressEmail = emailController.text;
     String password = passwordController.text;
+    String passCheck = passCheckController.text;
 
-    await toDoListDatabase.rawInsert(
-        "INSERT INTO $userTable"
-            " ($table1Column1, $table1Column2, $table1Column3)"
-            " VALUES('$nameUser', '$addressEmail', '$password')"
-    );
-  }
+    if(passCheck == password){
+      await toDoListDatabase.insert(userTable,{
+        table1Column1: nameUser,
+        table1Column2: addressEmail,
+        table1Column3: password,}
+      );
+      mySnackBar('Register successful!', Colors.lime);}
+    else{
+      mySnackBar('Register failed \nPasswords do not match', Colors.red);}
+    }
 
   void registerNew (){
-    insertIntoDB();
-
-    Navigator.pushNamed(context, '/');
+    registerMe();
+    Navigator.pushReplacementNamed(context, '/Login');
   }
 
   @override

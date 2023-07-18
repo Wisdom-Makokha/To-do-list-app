@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
 
-
-class HomeScreen extends StatelessWidget{
+class HomeScreen extends StatefulWidget{
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context){
-     return Scaffold(
+  State<HomeScreen> createState()=> HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen>{
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
         title: const Text('To do List'),
       ),
-      body: const Center(
-        child: Column(
-            mainAxisAlignment:MainAxisAlignment.center,
-            children: [
-              Text('Hello',
-                  style: TextStyle(
-                    color: Color(0xFF648c11),
-                    fontSize: 25,
-                    fontStyle: FontStyle.normal,
-                  )),
-              Text("Welcome to to the to do list app!",
-              style: TextStyle(
-                color: Colors.lime,
-                fontSize: 18,
-                fontStyle: FontStyle.normal,
-              )),
-              Image(image: AssetImage('images/'
-                  'home_screen_to_do_list.png')),
-            ],
-        ),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.lime,
+              child: Icon(Icons.check),
+            ),
+            title: Text('Tile 1'),
+
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        color: Colors.green,
+        child: Container(height: 70,)
       ),
     );
   }
-
 }
