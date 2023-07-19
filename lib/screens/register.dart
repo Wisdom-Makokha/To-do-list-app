@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:to_do_list/Definitions/declarations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterScreen extends StatefulWidget{
   const RegisterScreen ({super.key});
@@ -14,6 +16,7 @@ final TextEditingController emailController = TextEditingController();
 final TextEditingController passCheckController = TextEditingController();
 
 class RegisterScreenState extends State<RegisterScreen>{
+  //Function to build and render the snack bar when called
   void mySnackBar(String myText, Color myBackgroundColor)
   {
     final snackBar = SnackBar(
@@ -24,32 +27,69 @@ class RegisterScreenState extends State<RegisterScreen>{
       ),
       backgroundColor: myBackgroundColor,
       duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  Future<void> registerMe() async{
-    String nameUser = userNameController.text;
-    String addressEmail = emailController.text;
-    String password = passwordController.text;
-    String passCheck = passCheckController.text;
-
-    if(passCheck == password){
-      await toDoListDatabase.insert(userTable,{
-        table1Column1: nameUser,
-        table1Column2: addressEmail,
-        table1Column3: password,}
-      );
-      mySnackBar('Register successful!', Colors.lime);}
-    else{
-      mySnackBar('Register failed \nPasswords do not match', Colors.red);}
-    }
-
-  void registerNew (){
-    registerMe();
+  void screenShiftLogin (){
     Navigator.pushReplacementNamed(context, '/Login');
   }
+
+  //Function to get the highest id
+  //This is to make the id's in the table to be ordered by ascension
+  Future<int> getId() async{
+    final result = await toDoListDatabase.rawQuery(
+      "SELECT MAX(id) AS id FROM $userTable"
+    );
+
+    int myId = result.isNotEmpty ? int.parse(result.first['id'].toString()) : 1;
+
+    return myId++;
+  }
+
+  //admin delete
+  Future<void> deleteAll()async{
+    print(await toDoListDatabase.delete(userTable));
+  }
+
+  Future<void> registerMe() async{
+    //the text editing controller does nothing (no data is input into any string)
+    // when the text field is left empty so we check if the text editing controller
+    //itself is empty to tell the user it is empty
+
+    if(userNameController.text.isEmpty){
+      mySnackBar('Username is field empty', Colors.red);
+    }else if(emailController.text.isEmpty){
+      mySnackBar('Email field is empty', Colors.red);
+    }else if(passwordController.text.isEmpty){
+      mySnackBar('Password field is empty', Colors.red);
+    } else if(passCheckController.text.isEmpty){
+      mySnackBar('Confirm password field is empty', Colors.red);
+    } else{
+      var thisUser = TaskUsers(
+        userId: await getId(),
+        username: userNameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      final String passCheck = passCheckController.text;
+
+      if(passCheck != thisUser.password){
+        mySnackBar('Register failed \nPasswords do not match', Colors.red);
+
+      }  else{
+        await toDoListDatabase.insert(
+            userTable,
+            thisUser.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace);
+        mySnackBar('Register successful!', Colors.lime);
+        screenShiftLogin();
+      }
+    }
+    }
+
 
   @override
   Widget build(BuildContext context){
@@ -97,7 +137,7 @@ class RegisterScreenState extends State<RegisterScreen>{
               ),
             ),
             ElevatedButton(
-              onPressed: registerNew,
+              onPressed: registerMe,
               style: elevatedButtonsStyle,
               child: const Text('Register'),
             )

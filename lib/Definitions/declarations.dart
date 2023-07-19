@@ -1,8 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+/// This is important for the task implementation
+/// SELECT MAX(column_name) FROM table_name;
+/// It will help with making the next largest id
+///
+///Variables and classes
 late Database toDoListDatabase;
+late int myLoginId;
 
+class TaskUsers{
+  const TaskUsers({
+    required this.userId,
+    required this.username,
+    required this.email,
+    required this.password
+  });
+
+  final int userId;
+  final String username;
+  final String email;
+  final String password;
+
+  Map<String, dynamic> toMap(){
+    return{
+      'id': userId,
+      userTBUsername: username,
+      userTBEmail: email,
+      userTBPassword: password,
+    };
+  }
+}
+
+class MyTasks{
+  const MyTasks({
+    required this.taskId,
+    required this.taskName,
+    required this.description,
+    this.completed = false,
+    this.taskUserId = 0,
+  });
+
+  final int taskId;
+  final String taskName;
+  final String description;
+  final bool completed;
+  final int taskUserId;
+
+  Map<String, dynamic> toMap(){
+    return{
+      taskTBName: taskName,
+      taskTBDescription: description,
+      taskTBCompletedFlag: completed ? true : false,
+      taskTBUserIdForeign: taskUserId,
+    };
+  }
+}
+///
+///
+///
+///Reused properties
 //Elevated button style defined here for reuse
 final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
   side: const BorderSide(
@@ -21,19 +78,10 @@ const EdgeInsetsGeometry textFieldPadding= EdgeInsets.symmetric(
   horizontal: 10,
   vertical: 10,
 );
-
-const String userTable = "users";
-
-const String table1Column1 = 'username';
-const String table1Column2 = 'email';
-const String table1Column3 = 'password';
-
-const String taskTable = "tasks";
-
-const String taskTBName = 'title';
-const String taskTBDescription = 'description';
-const String taskTBCompletedFlag = 'complete';
-
+///
+///
+///
+///Reused Widgets
 //class to create a TextField whenever it is required
 class MyTextField extends StatelessWidget{
   const MyTextField({
@@ -61,3 +109,23 @@ class MyTextField extends StatelessWidget{
     );
   }
 }
+///
+///
+///
+/// Database table definitions
+const String userTable = "users";
+
+const String userTBUsername = 'username';
+const String userTBEmail = 'email';
+const String userTBPassword = 'password';
+
+const String taskTable = "tasks";
+
+const String taskTBName = 'title';
+const String taskTBDescription = 'description';
+const String taskTBCompletedFlag = 'complete';
+const String taskTBUserIdForeign = 'userID';
+
+
+
+

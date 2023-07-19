@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/Definitions/declarations.dart';
 
 
-
 class LoginScreen extends StatefulWidget{
   const LoginScreen ({super.key});
 
@@ -41,6 +40,10 @@ with SingleTickerProviderStateMixin{
     //Repeats the animation continuously in a reverse manner
   }
 
+  void screenShiftTo(String newRoute){
+    Navigator.pushReplacementNamed(context, '/$newRoute');
+  }
+
   void mySnackBar(String myText, Color myBackgroundColor)
   {
     final snackBar = SnackBar(
@@ -51,6 +54,7 @@ with SingleTickerProviderStateMixin{
       ),
       backgroundColor: myBackgroundColor,
       duration: const Duration(seconds: 2),
+      behavior: SnackBarBehavior.floating,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -68,20 +72,22 @@ with SingleTickerProviderStateMixin{
     String password = passwordController.text;
     //Retrieves the email and password entered by the user
 
-    List<Map<String, dynamic>> users = await toDoListDatabase.rawQuery(
-      "SELECT * FROM $userTable WHERE $table1Column1 = '$userName' "
-          "AND $table1Column3 = '$password'"
+    List<Map<String, dynamic>> users = await toDoListDatabase.query(
+        userTable,
+        where: '$userTBUsername = ? AND $userTBPassword = ?',
+        whereArgs: [userName,password]
     );
 
     if(users.isNotEmpty){
       //Login successful
       //Perform necessary actions (e.g navigate to another screen)
-      Navigator.pushReplacementNamed(context, '/Home');
+      screenShiftTo('Home');
+      myLoginId = int.parse(users.single['id'].toString());
+      print(myLoginId);
 
       mySnackBar('Login successful!', Colors.lime);
       } else {
       //Login failed
-
       mySnackBar('Login Failed!', Colors.red);
       print("Login failed");
     }
@@ -100,7 +106,9 @@ with SingleTickerProviderStateMixin{
           children:[
             FadeTransition(
               opacity: animation,
-              child: const Image(image: AssetImage('images/mobile_login_png.png'),
+              child: const Image(
+                image: AssetImage('images/mobile_login_png.png'
+              ),
                 width: 300,),
             ),
             Row(
