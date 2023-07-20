@@ -33,7 +33,7 @@ class TaskUsers{
 }
 
 class MyTasks{
-  const MyTasks({
+  MyTasks({
     required this.taskId,
     required this.taskName,
     required this.description,
@@ -44,11 +44,12 @@ class MyTasks{
   final int taskId;
   final String taskName;
   final String description;
-  final bool completed;
+  bool completed;
   final int taskUserId;
 
   Map<String, dynamic> toMap(){
     return{
+      'id': taskId,
       taskTBName: taskName,
       taskTBDescription: description,
       taskTBCompletedFlag: completed ? true : false,
@@ -125,7 +126,5 @@ const String taskTBName = 'title';
 const String taskTBDescription = 'description';
 const String taskTBCompletedFlag = 'complete';
 const String taskTBUserIdForeign = 'userID';
-
-
 
 

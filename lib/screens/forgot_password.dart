@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/definitions/declarations.dart';
 
-class ForgotPassScreen extends StatelessWidget{
+class ForgotPassScreen extends StatelessWidget {
   const ForgotPassScreen({super.key});
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Forgot Password'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+        appBar: AppBar(
+          title: const Text('Forgot Password'),
+        ),
+        body: SingleChildScrollView(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image(image: const AssetImage('images/forgot_password.png'),
-            width: MediaQuery.of(context).size.width,),
+            Image(
+              image: const AssetImage('images/forgot_password.png'),
+              width: MediaQuery.of(context).size.width,
+            ),
             const Padding(
               padding: textFieldPadding,
               child: TextField(
@@ -27,13 +29,11 @@ class ForgotPassScreen extends StatelessWidget{
               ),
             ),
             ElevatedButton(
-              onPressed:(){ },
+              onPressed: () {},
               style: elevatedButtonsStyle,
               child: const Text('Reset Password'),
             ),
           ],
-        )
-      )
-    );
+        )));
   }
 }
