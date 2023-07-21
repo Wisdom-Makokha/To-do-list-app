@@ -45,16 +45,15 @@ class HomeScreenState extends State<HomeScreen> {
     where: '$taskTBUserIdForeign = ?',
     whereArgs: [myLoginId]);
 
-    setState(() {
-      tasks = List.generate(taskList.length, (i) =>
-          MyTasks(
-          taskId: taskList[i]['id'],
-          taskName: taskList[i][taskTBName],
-          description: taskList[i][taskTBDescription],
-          completed: taskList[i][taskTBCompletedFlag],
-          taskUserId: taskList[i][taskTBUserIdForeign])
-      );
-    });
+    tasks = List.generate(taskList.length, (i) =>
+        MyTasks(
+            taskId: taskList[i]['id'],
+            taskName: taskList[i][taskTBName],
+            description: taskList[i][taskTBDescription],
+            completed: taskList[i][taskTBCompletedFlag] == 1 ? true : false,
+            taskUserId: taskList[i][taskTBUserIdForeign])
+    );
+    setState(() {tasks;});
   }
 
   Future<int> getId() async {
@@ -154,23 +153,31 @@ class HomeScreenState extends State<HomeScreen> {
     return tasks.length;
   }
 
-  Widget getIcon(BuildContext context, bool done) {
-    return done ? const Icon(Icons.done) : const Icon(Icons.remove);
-  }
-
+  ///This is a function that returns a text style and takes to values
+  ///context and the bool for whether a task is complete or not
   TextStyle getStyle(BuildContext context, bool done) {
+    ///This portion returns style for giving text a line through
     if (done) {
       return const TextStyle(
         color: Colors.black26,
         decoration: TextDecoration.lineThrough,
       );
-    } else {
+    }
+    ///the style here is for normal text
+    else {
       return const TextStyle(
         color: Colors.black,
       );
     }
   }
 
+  ///The rest of these functions repeat the above principle but for different things
+  ///This function returns Widget icon and checks whether the task is done or not
+  Widget getIcon(BuildContext context, bool done) {
+    return done ? const Icon(Icons.done) : const Icon(Icons.remove);
+  }
+
+  ///This function returns a color and also checks if the task is done
   Color getColor(BuildContext context, bool done) {
     return done ? Colors.lime : Colors.purple;
   }
@@ -183,14 +190,25 @@ class HomeScreenState extends State<HomeScreen> {
 
         return ListTile(
           leading: CircleAvatar(
+            ///color is gotten from getColor function
             backgroundColor: getColor(context, task.completed),
+            ///icon type is gotten from function
             child: getIcon(context, task.completed),
           ),
-          title: Text(task.taskName),
-          subtitle: Text(
-            task.description,
+          title: Text(
+            task.taskName,
+            ///Style for text is gotten from getStyle function
             style: getStyle(context, task.completed),
           ),
+          subtitle: Text(
+            task.description,
+            ///Style for text is gotten from getStyle function
+            style: getStyle(context, task.completed),
+          ),
+          ///The onTap portion is the most important for ensuring there is a change
+          ///task.completed is turned either true or false affecting everything else
+          ///setState is important to ensure flutter actively monitors task.completed
+          ///and changes everything it affects accordingly
           onTap: () {
             setState(() {
               task.completed = !task.completed;
@@ -209,7 +227,7 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       body: buildList(context),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: addTaskDialog,
+        onPressed: viewTable,
         label: const Text('Add task'),
         icon: const Icon(Icons.add),
       ),
