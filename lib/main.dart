@@ -63,7 +63,7 @@ class ToDoApp extends StatelessWidget {
         '/ForgotPass': (context) => const ForgotPassScreen(),
       },
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF648c11 )),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF00FF00 )),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );

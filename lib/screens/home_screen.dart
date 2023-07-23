@@ -28,6 +28,8 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   List<MyTasks> tasks = [];
+  List<MyTasks> inCompletedTasks = [];
+  List<MyTasks> completedTasks = [];
 
   final taskNameController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -53,7 +55,18 @@ class HomeScreenState extends State<HomeScreen> {
             completed: taskList[i][taskTBCompletedFlag] == 1 ? true : false,
             taskUserId: taskList[i][taskTBUserIdForeign])
     );
-    setState(() {tasks;});
+
+    for(int i = 0; i < tasks.length; i++){
+      if(tasks[i].completed){
+        completedTasks.add(tasks[i]);
+      } else {
+        inCompletedTasks.add(tasks[i]);
+      }
+    }
+    setState(() {
+      completedTasks;
+      inCompletedTasks;
+    });
   }
 
   Future<int> getId() async {
@@ -87,7 +100,7 @@ class HomeScreenState extends State<HomeScreen> {
     );
 
     setState(() {
-      tasks.add(myNewTask);
+      inCompletedTasks.add(myNewTask);
     });
 
     await toDoListDatabase.insert(taskTable, myNewTask.toMap(),
@@ -145,12 +158,12 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  int numberOfTasks(){
+  int numberOfTasks(List<MyTasks> toCount){
     setState(() {
-      tasks;
+      toCount;
     });
 
-    return tasks.length;
+    return toCount.length;
   }
 
   ///This is a function that returns a text style and takes to values
@@ -179,14 +192,62 @@ class HomeScreenState extends State<HomeScreen> {
 
   ///This function returns a color and also checks if the task is done
   Color getColor(BuildContext context, bool done) {
-    return done ? Colors.lime : Colors.purple;
+    return done ? Theme.of(context).colorScheme.primary
+        : Colors.blueGrey;
   }
 
-  Widget buildList(BuildContext context){
+  Widget buildContainer(BuildContext context, String inText, bool done){
+    return Container(
+      height: 60,
+      width: 300,
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
+      padding: const EdgeInsets.all(3),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: getColor(context, done),
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+          borderRadius: const BorderRadius.horizontal(
+            left: Radius.circular(10),
+            right: Radius.circular(10),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: getColor(context, done),
+              blurRadius: 5,
+              blurStyle: BlurStyle.outer,
+            )
+          ]
+      ),
+      child: Text(
+        inText,
+        style: Theme.of(context).textTheme.headlineSmall,),
+    );
+  }
+
+  Widget buildList(BuildContext context, List<MyTasks> firstList,
+      List<MyTasks> secondList){
     return ListView.builder(
-      itemCount: numberOfTasks(),
+      shrinkWrap: true,
+      itemCount: numberOfTasks(firstList),
       itemBuilder: (context, index) {
-        final task = tasks[index];
+        final task = firstList[index];
+
+        Future<void> tapToComplete()async{
+          setState(() {
+            task.completed = !task.completed;
+            secondList.add(task);
+            firstList.remove(task);
+          });
+
+          await toDoListDatabase.update(
+              taskTable,
+              task.toMap(),
+              where: 'id = ?',
+              whereArgs: [task.taskId]);
+        }
 
         return ListTile(
           leading: CircleAvatar(
@@ -209,11 +270,7 @@ class HomeScreenState extends State<HomeScreen> {
           ///task.completed is turned either true or false affecting everything else
           ///setState is important to ensure flutter actively monitors task.completed
           ///and changes everything it affects accordingly
-          onTap: () {
-            setState(() {
-              task.completed = !task.completed;
-            });
-          },
+          onTap: tapToComplete,
         );
       },
     );
@@ -225,9 +282,20 @@ class HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('To do List'),
       ),
-      body: buildList(context),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            buildContainer(context, 'Incomplete Tasks', false),
+            buildList(context, inCompletedTasks, completedTasks),
+            buildContainer(context, 'Complete Tasks', true),
+            buildList(context, completedTasks, inCompletedTasks),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: viewTable,
+        onPressed: addTaskDialog,
         label: const Text('Add task'),
         icon: const Icon(Icons.add),
       ),
