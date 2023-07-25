@@ -72,6 +72,7 @@ final ButtonStyle elevatedButtonsStyle = ElevatedButton.styleFrom(
     fontSize: 20,
     fontStyle: FontStyle.normal,
   ),
+  backgroundColor: const Color.fromARGB(255,115,155,193),
 );
 
 //Values for the padding of TextField

@@ -11,27 +11,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  void mySnackBar(String myText, Color myBackgroundColor) {
-    final snackBar = SnackBar(
-      content: Text(
-        myText,
-        style: const TextStyle(
-          color: Colors.black,
-        ),
-      ),
-      backgroundColor: myBackgroundColor,
-      duration: const Duration(seconds: 2),
-      behavior: SnackBarBehavior.floating,
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
   List<MyTasks> tasks = [];
   List<MyTasks> inCompletedTasks = [];
   List<MyTasks> completedTasks = [];
+  int selectedIndex = 0;
 
   final taskNameController = TextEditingController();
+  //A controller to take the description for the task
   final descriptionController = TextEditingController();
 
   @override
@@ -41,23 +27,27 @@ class HomeScreenState extends State<HomeScreen> {
     initTaskList();
   }
 
+  //Function to initialize a list of tasks as obtained from the database
   Future<void> initTaskList() async {
+    //task list is a list map containing all the tasks for a specific login id
     final List<Map<String, dynamic>> taskList = await toDoListDatabase.query(
         taskTable,
-    where: '$taskTBUserIdForeign = ?',
-    whereArgs: [myLoginId]);
+        where: '$taskTBUserIdForeign = ?',
+        whereArgs: [myLoginId]);
 
-    tasks = List.generate(taskList.length, (i) =>
-        MyTasks(
+    //the list map is converted into a list of classes of my tasks
+    tasks = List.generate(
+        taskList.length,
+        (i) => MyTasks(
             taskId: taskList[i]['id'],
             taskName: taskList[i][taskTBName],
             description: taskList[i][taskTBDescription],
             completed: taskList[i][taskTBCompletedFlag] == 1 ? true : false,
-            taskUserId: taskList[i][taskTBUserIdForeign])
-    );
+            taskUserId: taskList[i][taskTBUserIdForeign]));
 
-    for(int i = 0; i < tasks.length; i++){
-      if(tasks[i].completed){
+    //tasks is split into two lists, one completed the other in-completed
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].completed) {
         completedTasks.add(tasks[i]);
       } else {
         inCompletedTasks.add(tasks[i]);
@@ -69,6 +59,8 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  //To ensure the ids are sequential this function takes the current
+  //largest task id and returns another id increases by one
   Future<int> getId() async {
     final result =
         await toDoListDatabase.rawQuery("SELECT MAX(id) AS id FROM $taskTable");
@@ -82,12 +74,13 @@ class HomeScreenState extends State<HomeScreen> {
     return myId;
   }
 
+  //Admin delete everything from table
   Future<void> deleteAll() async {
     print(await toDoListDatabase.delete(taskTable));
   }
 
-
-  Future<void> viewTable() async{
+  //Admin view table in terminal
+  Future<void> viewTable() async {
     print(await toDoListDatabase.query(taskTable));
   }
 
@@ -110,7 +103,7 @@ class HomeScreenState extends State<HomeScreen> {
     screenShiftBack();
   }
 
-  void screenShiftBack(){
+  void screenShiftBack() {
     Navigator.pop(context);
   }
 
@@ -176,6 +169,7 @@ class HomeScreenState extends State<HomeScreen> {
         decoration: TextDecoration.lineThrough,
       );
     }
+
     ///the style here is for normal text
     else {
       return const TextStyle(
@@ -192,39 +186,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   ///This function returns a color and also checks if the task is done
   Color getColor(BuildContext context, bool done) {
-    return done ? Theme.of(context).colorScheme.primary
-        : Colors.blueGrey;
-  }
-
-  Widget buildContainer(BuildContext context, String inText, bool done){
-    return Container(
-      height: 60,
-      width: 300,
-      margin: const EdgeInsets.only(bottom: 10, top: 10),
-      padding: const EdgeInsets.all(3),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: getColor(context, done),
-            width: 2,
-            style: BorderStyle.solid,
-          ),
-          borderRadius: const BorderRadius.horizontal(
-            left: Radius.circular(10),
-            right: Radius.circular(10),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: getColor(context, done),
-              blurRadius: 5,
-              blurStyle: BlurStyle.outer,
-            )
-          ]
-      ),
-      child: Text(
-        inText,
-        style: Theme.of(context).textTheme.headlineSmall,),
-    );
+    return done ? Theme.of(context).colorScheme.tertiary : Colors.blueGrey;
   }
 
   Widget buildList(BuildContext context, List<MyTasks> firstList,
@@ -248,32 +210,58 @@ class HomeScreenState extends State<HomeScreen> {
               where: 'id = ?',
               whereArgs: [task.taskId]);
         }
+        int modifier = 100 * (index % 10);
 
-        return ListTile(
-          leading: CircleAvatar(
-            ///color is gotten from getColor function
-            backgroundColor: getColor(context, task.completed),
-            ///icon type is gotten from function
-            child: getIcon(context, task.completed),
+        return Container(
+          margin: const EdgeInsets.only(
+            top: 2,
+            bottom: 4,
+            left: 5,
+            right: 5
           ),
-          title: Text(
-            task.taskName,
-            ///Style for text is gotten from getStyle function
-            style: getStyle(context, task.completed),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(240 * modifier, 244, 255, 0.3),
+            borderRadius: BorderRadius.circular(8),
           ),
-          subtitle: Text(
-            task.description,
-            ///Style for text is gotten from getStyle function
-            style: getStyle(context, task.completed),
+          child: ListTile(
+            leading: CircleAvatar(
+              ///color is gotten from getColor function
+              backgroundColor: getColor(context, task.completed),
+              ///icon type is gotten from function
+              child: getIcon(context, task.completed),
+            ),
+            title: Text(
+              task.taskName,
+              ///Style for text is gotten from getStyle function
+              style: getStyle(context, task.completed),
+            ),
+            subtitle: Text(
+              task.description,
+              ///Style for text is gotten from getStyle function
+              style: getStyle(context, task.completed),
+            ),
+            ///The onTap portion is the most important for ensuring there is a change
+            ///task.completed is turned either true or false affecting everything else
+            ///setState is important to ensure flutter actively monitors task.completed
+            ///and changes everything it affects accordingly
+            onTap: tapToComplete,
           ),
-          ///The onTap portion is the most important for ensuring there is a change
-          ///task.completed is turned either true or false affecting everything else
-          ///setState is important to ensure flutter actively monitors task.completed
-          ///and changes everything it affects accordingly
-          onTap: tapToComplete,
         );
       },
     );
+  }
+
+  Widget selectWidget(){
+    if(selectedIndex == 0){
+      return buildList(context, inCompletedTasks, completedTasks);
+    }
+      return buildList(context, completedTasks, inCompletedTasks);
+  }
+
+  void onIconTapped(index){
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
   @override
@@ -281,32 +269,62 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('To do List'),
+        backgroundColor: selectedIndex == 0 ? getColor(context, false)
+        : getColor(context, true),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            buildContainer(context, 'Incomplete Tasks', false),
-            buildList(context, inCompletedTasks, completedTasks),
-            buildContainer(context, 'Complete Tasks', true),
-            buildList(context, completedTasks, inCompletedTasks),
-          ],
-        ),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [selectedIndex == 0 ?
+                getColor(context, false)
+                    : getColor(context, true),
+                  Colors.white38
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomRight,
+              )
+            ),
+          ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                selectWidget(),
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: addTaskDialog,
         label: const Text('Add task'),
         icon: const Icon(Icons.add),
+        backgroundColor: selectedIndex == 0 ? getColor(context, false)
+        : getColor(context, true),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-          color: Theme.of(context).indicatorColor,
-          child: Container(
-            height: 70,
-          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.white70,
+        onTap: onIconTapped,
+        currentIndex: selectedIndex,
+        backgroundColor: selectedIndex == 0 ? getColor(context, false)
+        : getColor(context, true),
+        items: [
+          BottomNavigationBarItem(
+            icon: getIcon(context, false),
+            label: 'Incomplete',
+          ),
+          BottomNavigationBarItem(
+            icon: getIcon(context, true),
+            label: 'Complete'
+          )
+        ],
+      )
     );
   }
 }
-
-

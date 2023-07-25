@@ -96,6 +96,7 @@ class RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
       body: SingleChildScrollView(
         child: Column(
